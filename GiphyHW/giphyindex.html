@@ -1,0 +1,70 @@
+<html>
+
+    <head>
+    
+            <meta charset="UTF-8">
+            <script
+			  src="https://code.jquery.com/jquery-3.3.1.js"
+			  integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+              crossorigin="anonymous"></script>
+              
+            <!-- Latest compiled and minified CSS -->
+           <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+           <!-- Latest compiled and minified JavaScript -->
+           <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    </head>
+    <body>
+            <div class="jumbotron" id="jumbo">
+                    <div class="container">
+                      The whole universe is on a ......
+                    </div>
+                    <p><a class="btn btn-primary btn-lg" id="Big Bang Theory" role="button">The Big Bang Theory</a></p>
+                  </div>
+                  <div class="col-lg-10" id="area"></div>
+                  <div class="col-lg-2" id="AddArea">
+                        <input id="Form" type="text" class="form-control" placeholder="Username" aria-describedby="basic-addon1">
+                        <button id="Add" class="btn-lg btn">Add this</button>
+                  </div>
+
+            <script type="text/javascript"></script>
+            <script>
+                const queryURL="https://api.giphy.com/v1/gifs/search?api_key=nxvpTaXIFCQrARyvnZ14YRvGhAdqq8kP&limit=10n&q=";
+                var titlesret=[];
+                var responses=[];
+                function makeajax(query){
+                    $.ajax({
+                        url: queryURL+query,
+                        method: "GET"
+                      }).then(function(response) {
+                        console.log(response.data.length);
+                        console.log(response);
+                        
+                        for(var i = 0;i<response.data.length;i++){
+                            if(responses.indexOf(response.data[i].id)==-1){
+                                if(titlesret.indexOf(response.data[i].title)==-1){
+                                    $("#jumbo").append($("<button>",{class:"btn-primary btn btn-sec btn-lg",id:response.data[i].title,text:response.data[i].title}));
+                                    $(".btn-sec").css({"background-color":"orange"});
+                                    titlesret.push(response.data[i].title);
+                                };
+                                $("#area").prepend($("<img>",{class:"thumbnail",src:response.data[i].images.original_still.url}));
+                                responses.push(response.data[i].id);
+                            };
+                        };
+                      });
+                };
+                    $(document.body).on("click", ".btn-primary", function() {
+                        query=$(this).attr("id");
+                        console.log("Start");
+                        console.log(query);
+                        makeajax(query);
+
+
+                    });
+                    $(document.body).on("click", "#Add", function() {
+                        $("#jumbo").append($("<button>",{class:"btn-primary btn-lg btn",text:$("#Form").val()}));
+                        makeajax($("#Form").val());
+                    });
+            </script>
+    </body>
+</html>
